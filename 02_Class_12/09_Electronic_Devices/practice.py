@@ -1,109 +1,86 @@
-"""Electronic Devices Practice"""
+# ============================================================================
+# Electronic Devices & Semiconductors — Practice Exercises
+# ============================================================================
+# Instructions:
+#   • Solve each exercise yourself before checking any reference.
+#   • Keep units consistent and check that answers make physical sense.
+#   • There is no solution file — the goal is the process, not the answer.
+# ============================================================================
+
 import numpy as np
+import matplotlib.pyplot as plt
 
-e = 1.602e-19
-k_B = 1.38e-23
 
-print("="*70)
-print("ELECTRONIC DEVICES PRACTICE")
-print("="*70)
+# ────────────────────────────────────────────────────────────────────────────
+# Exercise 1: Diode I–V Characteristic
+# ────────────────────────────────────────────────────────────────────────────
+#
+# Shockley equation: I = I0*(exp(qV/kT) - 1), I0=1e-10A, T=300K.
+#   (a) Plot I vs V from -1V to 0.8V.
+#   (b) Find forward voltage at I=10mA.
+#   (c) Zoom in on the reverse saturation region.
+#
+# Hints:
+#   → q=1.6e-19, k=1.38e-23
+#   → Forward bias: V>0 gives exponential growth
+#   → Use two subplots for forward and reverse
 
-def p1():
-    print("\nP1: Thermal Voltage")
-    print("-" * 70)
-    T = 300  # K
-    V_T = k_B * T / e
-    print(f"Given: T = {T}K")
-    print(f"V_T = k_B⋅T/e = {V_T*1000:.1f}mV ≈ 26mV")
-    return V_T
 
-def p2():
-    print("\nP2: Diode Current")
-    print("-" * 70)
-    I0 = 1e-12  # A
-    V = 0.6  # V
-    V_T = 0.026
-    I = I0 * (np.exp(V/V_T) - 1)
-    print(f"Given: I₀ = {I0}A, V = {V}V, V_T = {V_T}V")
-    print(f"I = I₀(e^(V/V_T) - 1) = {I:.2e}A ≈ {I*1e3:.0f}mA")
-    return I
+# Your code here
 
-def p3():
-    print("\nP3: LED Photon Energy")
-    print("-" * 70)
-    E_g = 1.5  # eV (GaAs bandgap)
-    print(f"Given: E_g = {E_g}eV")
-    print(f"Photon λ = hc/E_g = {1240/E_g:.0f}nm (near-infrared)")
-    return
 
-def p4():
-    print("\nP4: Reverse Breakdown")
-    print("-" * 70)
-    print(f"Zener diode: V_Z ≈ 5V (typical)")
-    print(f"Used for voltage regulation")
-    print(f"Max power: P = V_Z × I_max")
-    return
+# ────────────────────────────────────────────────────────────────────────────
+# Exercise 2: Half-Wave Rectifier
+# ────────────────────────────────────────────────────────────────────────────
+#
+# Input: V_in(t) = 5*sin(2π*50*t).
+#   (a) Plot V_in and V_out (V_out = V_in if V_in>0, else 0) vs time.
+#   (b) Compute average and rms of V_out.
+#   (c) Show how a capacitor C smooths the output.
+#
+# Hints:
+#   → t = np.linspace(0, 0.04, 1000)
+#   → V_out = np.where(V_in > 0, V_in, 0)
+#   → V_avg = np.mean(V_out), V_rms = np.sqrt(np.mean(V_out**2))
 
-def p5():
-    print("\nP5: BJT Gain")
-    print("-" * 70)
-    I_b = 1e-6  # A (1µA base current)
-    beta = 100
-    I_c = beta * I_b
-    print(f"Given: β = {beta}, I_b = {I_b*1e6:.0f}µA")
-    print(f"I_c = β⋅I_b = {I_c*1e3:.0f}mA")
-    print(f"Transistor amplifies current by {beta}×")
-    return I_c
 
-def p6():
-    print("\nP6: Common Emitter Gain")
-    print("-" * 70)
-    R_c = 1000  # Collector resistance (Ω)
-    r_e = 26  # Emitter resistance (Ω) at 1mA
-    A_v = R_c / r_e
-    print(f"Given: R_c = {R_c}Ω, r_e = {r_e}Ω")
-    print(f"Voltage gain A_v = R_c/r_e = {A_v:.0f}")
-    return A_v
+# Your code here
 
-def p7():
-    print("\nP7: MOSFET Threshold Voltage")
-    print("-" * 70)
-    print(f"NMOS: V_T ≈ +0.4 to +1.0V (switches ON)")
-    print(f"PMOS: V_T ≈ -0.4 to -1.0V (switches ON)")
-    print(f"Gate voltage controls channel resistance")
-    return
 
-def p8():
-    print("\nP8: Logic Gate Function")
-    print("-" * 70)
-    print(f"NOT: Y = NOT(A)")
-    print(f"NAND: Y = NOT(A AND B)")
-    print(f"NOR: Y = NOT(A OR B)")
-    print(f"All combinational logic built from these")
-    return
+# ────────────────────────────────────────────────────────────────────────────
+# Exercise 3: Transistor as Amplifier (conceptual)
+# ────────────────────────────────────────────────────────────────────────────
+#
+# For a common-emitter amplifier: β=100, R_C=1kΩ, V_CC=12V.
+#   (a) If I_B=0.05mA, find I_C and V_CE.
+#   (b) Plot output characteristics: I_C vs V_CE for I_B = 0, 20, 40, 60, 80 μA.
+#   (c) Mark the saturation and active regions.
+#
+# Hints:
+#   → I_C = β*I_B
+#   → V_CE = V_CC - I_C*R_C
+#   → Saturation when V_CE < ~0.2V
 
-def p9():
-    print("\nP9: Rectification")
-    print("-" * 70)
-    V_peak = 20  # V
-    V_diode = 0.7
-    V_out = V_peak - V_diode
-    print(f"Given: V_peak = {V_peak}V")
-    print(f"Across diode drop ≈ {V_diode}V")
-    print(f"Output = {V_out}V (half-wave)")
-    return V_out
 
-def p10():
-    print("\nP10: Bandgap vs Wavelength")
-    print("-" * 70)
-    materials = {'Si': 1.12, 'Ge': 0.66, 'GaAs': 1.42, 'GaN': 3.44}
-    h_over_c = 1240  # eV⋅nm
-    for mat, E_g in materials.items():
-        lambda_w = h_over_c / E_g
-        print(f"{mat}: E_g = {E_g:.2f}eV → λ_max = {lambda_w:.0f}nm")
-    return
+# Your code here
 
-if __name__ == "__main__":
-    for i in range(1, 11):
-        eval(f"p{i}()")
-    print("\n" + "="*70)
+
+# ────────────────────────────────────────────────────────────────────────────
+# Exercise 4: Logic Gates Truth Table
+# ────────────────────────────────────────────────────────────────────────────
+#
+# Implement AND, OR, NOT, NAND, NOR, XOR as Python functions.
+# Print the full truth table for all gates for inputs (0,0),(0,1),(1,0),(1,1).
+# Verify: NAND is universal — build AND and OR from only NANDs.
+#
+# Hints:
+#   → Simple Python: and_gate = lambda a,b: int(a and b)
+#   → For NAND-only: recall that NOT A = NAND(A,A)
+
+
+# Your code here
+
+
+# ============================================================================
+# Sandbox — experiment freely below
+# ============================================================================

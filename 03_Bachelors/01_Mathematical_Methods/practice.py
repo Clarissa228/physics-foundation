@@ -1,59 +1,90 @@
-"""
-Mathematical Methods for Physics: Practice Exercises
-
-Complete each exercise to solidify understanding of:
-- Vector calculus (gradient, divergence, curl)
-- Fourier series and transforms
-- Eigenvalue problems
-- Special functions
-- ODEs and PDEs
-
-Author: Physics Education Program
-"""
+# ============================================================================
+# Mathematical Methods for Physics — Practice Exercises
+# ============================================================================
+# Instructions:
+#   • Solve each exercise yourself before checking any reference.
+#   • Keep units consistent and check that answers make physical sense.
+#   • There is no solution file — the goal is the process, not the answer.
+# ============================================================================
 
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.integrate import quad, odeint, solve_ivp
-from scipy.special import legendre, hermite
-from scipy.fft import fft, fftfreq
-import sympy as sp
+
+
+# ────────────────────────────────────────────────────────────────────────────
+# Exercise 1: Vector Calculus
+# ────────────────────────────────────────────────────────────────────────────
+#
+# For F = (x²y, xy², xyz):
+#   (a) Compute div F and curl F analytically.
+#   (b) Verify numerically at point (1, 2, 3) using finite differences.
+#   (c) Visualise F in the xy-plane (z=0) as a quiver plot.
+#
+# Hints:
+#   → Use sympy symbols x,y,z and diff()
+#   → Numerical: (F(x+h)-F(x-h))/(2h)
+#   → np.meshgrid and plt.quiver for visualisation
+
+
+# Your code here
+
+
+# ────────────────────────────────────────────────────────────────────────────
+# Exercise 2: Fourier Series
+# ────────────────────────────────────────────────────────────────────────────
+#
+# Approximate a square wave f(x) = +1 for 0<x<π, -1 for π<x<2π
+# using N terms of its Fourier series.
+#   (a) Derive the coefficients (odd harmonics only).
+#   (b) Plot partial sums for N=1,3,5,11 and observe Gibbs phenomenon.
+#
+# Hints:
+#   → b_n = (2/π) * integral(f*sin(nx)) = 4/(nπ) for odd n
+#   → f_N(x) = Σ b_n * sin(nx)
+#   → Use subplot grid or overlay all on one plot
+
+
+# Your code here
+
+
+# ────────────────────────────────────────────────────────────────────────────
+# Exercise 3: Ordinary Differential Equations
+# ────────────────────────────────────────────────────────────────────────────
+#
+# Solve the damped harmonic oscillator ODE:
+# m*x'' + b*x' + k*x = F0*cos(ωt) (driven oscillator)
+#   (a) Solve numerically with scipy.integrate.solve_ivp.
+#   (b) Find the steady-state amplitude vs ω (resonance curve).
+#   (c) Compare underdamped, critically damped, overdamped cases.
+#
+# Hints:
+#   → Convert to first-order system: [x, v]
+#   → scipy.integrate.solve_ivp(fun, t_span, y0)
+#   → Sweep ω and record steady-state amplitude
+
+
+# Your code here
+
+
+# ────────────────────────────────────────────────────────────────────────────
+# Exercise 4: Eigenvalue Problems
+# ────────────────────────────────────────────────────────────────────────────
+#
+# Find eigenvalues and eigenvectors of:
+#   A = [[4,1],[2,3]] using numpy.
+#   (a) Verify A*v = λ*v for each pair.
+#   (b) Interpret physically (principal axes of inertia).
+#   (c) Diagonalise A: write A = P D P⁻¹.
+#
+# Hints:
+#   → np.linalg.eig(A)
+#   → np.dot, np.linalg.inv
+#   → D = diag(eigenvalues), P = column matrix of eigenvectors
+
+
+# Your code here
 
 
 # ============================================================================
-# EXERCISE 1: Vector Calculus - Computing and Verifying Identities
+# Sandbox — experiment freely below
 # ============================================================================
-
-def exercise_1_vector_calculus():
-    """
-    Exercise 1: Gradient, Divergence, Curl
-
-    Problem: For the vector field F = (x² + y, xy², z)
-    a) Compute ∇·F at point (1, 2, 0.5)
-    b) Compute ∇×F at point (1, 2, 0.5)
-    c) Show that ∇·(∇×F) = 0 analytically
-    """
-
-    # Define symbolic variables
-    x, y, z = sp.symbols('x y z', real=True)
-
-    # Vector field components
-    Fx = x**2 + y
-    Fy = x*y**2
-    Fz = z
-
-    # a) Divergence: ∇·F = ∂Fx/∂x + ∂Fy/∂y + ∂Fz/∂z
-    div_F = sp.diff(Fx, x) + sp.diff(Fy, y) + sp.diff(Fz, z)
-    print("="*70)
-    print("EXERCISE 1: Vector Calculus")
-    print("="*70)
-    print(f"\nVector field: F = ({Fx}, {Fy}, {Fz})")
-    print(f"\na) Divergence: ∇·F = {div_F}")
-
-    # Evaluate at (1, 2, 0.5)
-    div_at_point = div_F.subs([(x, 1), (y, 2), (z, 0.5)])
-    print(f"   At (1, 2, 0.5): ∇·F = {div_at_point}")
-
-    # b) Curl: ∇×F = (∂Fz/∂y - ∂Fy/∂z, ∂Fx/∂z - ∂Fz/∂x, ∂Fy/∂x - ∂Fx/∂y)
-    curl_Fx = sp.diff(Fz, y) - sp.diff(Fy, z)
-    curl_Fy = sp.diff(Fx, z) - sp.diff(Fz, x)
-    curl_Fz = sp.diff(Fy, x) - sp.diff(Fx, y)\n    \n    print(f\"\\nb) Curl: ∇×F = ({curl_Fx}, {curl_Fy}, {curl_Fz})\")\n    curl_at_point = (curl_Fx.subs([(x, 1), (y, 2), (z, 0.5)]),\n                     curl_Fy.subs([(x, 1), (y, 2), (z, 0.5)]),\n                     curl_Fz.subs([(x, 1), (y, 2), (z, 0.5)]))\n    print(f\"   At (1, 2, 0.5): ∇×F = {curl_at_point}\")\n    \n    # c) Verify ∇·(∇×F) = 0\n    div_curl = sp.diff(curl_Fx, x) + sp.diff(curl_Fy, y) + sp.diff(curl_Fz, z)\n    div_curl_simplified = sp.simplify(div_curl)\n    print(f\"\\nc) Divergence of curl:\")\n    print(f\"   ∇·(∇×F) = {div_curl_simplified}\")\n    print(f\"   ✓ Verified: Always zero (fundamental identity)\")\n    print()\n\n\n# ============================================================================\n# EXERCISE 2: Fourier Series - Square Wave Reconstruction\n# ============================================================================\n\ndef exercise_2_fourier_series():\n    \"\"\"\n    Exercise 2: Fourier Series Convergence\n    \n    Problem: Compute and plot the Fourier series approximation to:\n    f(x) = 1  for 0 < x < π\n    f(x) = -1 for -π < x < 0\n    \n    a) Plot partial sums with N = 5, 10, 20, 50 terms\n    b) Compute the L2 error ||f - f_N||_2 vs N\n    c) Verify Gibbs overshoot ≈ 8.95%\n    \"\"\"\n    \n    print(\"=\"*70)\n    print(\"EXERCISE 2: Fourier Series\")\n    print(\"=\"*70)\n    \n    def fourier_square_wave(x, N_terms):\n        \"\"\"Compute Fourier series: f(x) = (4/π) Σ sin((2n+1)x)/(2n+1)\"\"\"\n        f = np.zeros_like(x, dtype=float)\n        for n in range(N_terms):\n            f += (4/np.pi) * np.sin((2*n+1)*x) / (2*n+1)\n        return f\n    \n    # Generate x values\n    x = np.linspace(-np.pi, np.pi, 1000)\n    true_signal = np.sign(np.sin(x))\n    \n    # a) Plot Fourier approximations\n    fig, axes = plt.subplots(2, 2, figsize=(12, 8))\n    N_values = [5, 10, 20, 50]\n    \n    for idx, N in enumerate(N_values):\n        ax = axes[idx // 2, idx % 2]\n        fourier_approx = fourier_square_wave(x, N)\n        ax.plot(x, true_signal, 'k--', linewidth=2, label='True signal')\n        ax.plot(x, fourier_approx, 'b-', linewidth=2, label=f'Fourier (N={N})')\n        ax.set_xlabel('x', fontsize=11)\n        ax.set_ylabel('f(x)', fontsize=11)\n        ax.set_title(f'Fourier Approximation: N={N} terms', fontsize=12, fontweight='bold')\n        ax.legend(fontsize=10)\n        ax.grid(True, alpha=0.3)\n        ax.set_xlim(-np.pi, np.pi)\n        ax.set_ylim(-1.3, 1.3)\n    \n    plt.tight_layout()\n    plt.savefig('/tmp/fourier_exercise.png', dpi=150, bbox_inches='tight')\n    plt.show()\n    \n    # b) Compute L2 error\n    N_range = np.arange(1, 101)\n    L2_errors = []\n    \n    for N in N_range:\n        fourier_approx = fourier_square_wave(x, N)\n        error = np.sqrt(np.trapz((fourier_approx - true_signal)**2, x))\n        L2_errors.append(error)\n    \n    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5))\n    \n    # Linear scale\n    ax1.plot(N_range, L2_errors, 'b-', linewidth=2)\n    ax1.set_xlabel('Number of terms (N)', fontsize=11)\n    ax1.set_ylabel('L2 error ||f - f_N||₂', fontsize=11)\n    ax1.set_title('Convergence of Fourier Series (Linear Scale)', fontsize=12, fontweight='bold')\n    ax1.grid(True, alpha=0.3)\n    \n    # Log scale\n    ax2.semilogy(N_range, L2_errors, 'b-', linewidth=2)\n    ax2.set_xlabel('Number of terms (N)', fontsize=11)\n    ax2.set_ylabel('L2 error ||f - f_N||₂ (log scale)', fontsize=11)\n    ax2.set_title('Convergence of Fourier Series (Log Scale)', fontsize=12, fontweight='bold')\n    ax2.grid(True, alpha=0.3, which='both')\n    \n    plt.tight_layout()\n    plt.savefig('/tmp/fourier_convergence.png', dpi=150, bbox_inches='tight')\n    plt.show()\n    \n    print(f\"\\na) Fourier approximations plotted (see figure)\")\n    print(f\"\\nb) L2 error vs number of terms:\")\n    print(f\"   N=1:   error = {L2_errors[0]:.4f}\")\n    print(f\"   N=5:   error = {L2_errors[4]:.4f}\")\n    print(f\"   N=10:  error = {L2_errors[9]:.4f}\")\n    print(f\"   N=50:  error = {L2_errors[49]:.4f}\")\n    print(f\"   N=100: error = {L2_errors[99]:.4f}\")\n    \n    # c) Gibbs overshoot\n    N_gibbs = 50\n    fourier_gibbs = fourier_square_wave(x, N_gibbs)\n    overshoot_idx = np.where((x > 0) & (x < 0.2))[0]\n    max_overshoot = np.max(fourier_gibbs[overshoot_idx])\n    gibbs_percent = (max_overshoot - 1) * 100\n    \n    print(f\"\\nc) Gibbs phenomenon (N={N_gibbs}):\")\n    print(f\"   Maximum overshoot: {max_overshoot:.4f}\")\n    print(f\"   Overshoot percentage: {gibbs_percent:.2f}%\")\n    print(f\"   Theoretical limit: 8.95% (Gibbs-Wilbraham constant)\")\n    print()\n\n\n# ============================================================================\n# EXERCISE 3: Eigenvalue Problem - Quantum 2-State System\n# ============================================================================\n\ndef exercise_3_eigenvalue_problem():\n    \"\"\"\n    Exercise 3: Eigenvalue Problems\n    \n    Problem: For a Hamiltonian H = E₀(σ_z cos θ + σ_x sin θ)\n    where σ_x, σ_z are Pauli matrices:\n    \n    a) Find eigenvalues as function of θ\n    b) Find eigenvectors at θ = π/4\n    c) Plot energy levels vs θ\n    \"\"\"\n    \n    print(\"=\"*70)\n    print(\"EXERCISE 3: Eigenvalue Problem - 2-Level System\")\n    print(\"=\"*70)\n    \n    # Pauli matrices\n    sigma_x = np.array([[0, 1], [1, 0]])\n    sigma_z = np.array([[1, 0], [0, -1]])\n    E0 = 1.0\n    \n    # a) Eigenvalues vs θ\n    theta_range = np.linspace(0, 2*np.pi, 200)\n    eigenvalues_1 = []\n    eigenvalues_2 = []\n    \n    for theta in theta_range:\n        H = E0 * (np.cos(theta)*sigma_z + np.sin(theta)*sigma_x)\n        evals = np.linalg.eigvalsh(H)\n        eigenvalues_1.append(evals[0])\n        eigenvalues_2.append(evals[1])\n    \n    print(f\"\\na) Eigenvalues vs parameter θ:\")\n    print(f\"   E₁(θ) = E₀√(cos²θ + sin²θ) = E₀ (ground state)\")\n    print(f\"   E₂(θ) = -E₀ (excited state)\")\n    print(f\"\\n   (For this particular Hamiltonian, eigenvalues are independent of θ!)\")\n    \n    # b) Eigenvectors at θ = π/4\n    theta_example = np.pi/4\n    H_example = E0 * (np.cos(theta_example)*sigma_z + np.sin(theta_example)*sigma_x)\n    evals, evecs = np.linalg.eigh(H_example)\n    \n    print(f\"\\nb) At θ = π/4:\")\n    print(f\"   Eigenvalues: E₁ = {evals[0]:.4f}, E₂ = {evals[1]:.4f}\")\n    print(f\"\\n   Eigenvectors (quantum states):\")\n    for i in range(2):\n        evec = evecs[:, i]\n        print(f\"   |ψ_{i+1}⟩ = {evec[0]:.4f}|↑⟩ + {evec[1]:.4f}|↓⟩\")\n    \n    # c) Plot energy levels\n    fig, axes = plt.subplots(1, 2, figsize=(13, 5))\n    \n    ax = axes[0]\n    ax.plot(theta_range, eigenvalues_1, 'b-', linewidth=2.5, label='E₁(θ)')\n    ax.plot(theta_range, eigenvalues_2, 'r-', linewidth=2.5, label='E₂(θ)')\n    ax.fill_between(theta_range, eigenvalues_1, eigenvalues_2, alpha=0.2)\n    ax.set_xlabel('θ (parameter)', fontsize=12)\n    ax.set_ylabel('Energy eigenvalue', fontsize=12)\n    ax.set_title('Energy Levels vs Parameter', fontsize=13, fontweight='bold')\n    ax.legend(fontsize=11)\n    ax.grid(True, alpha=0.3)\n    ax.set_xticks([0, np.pi/2, np.pi, 3*np.pi/2, 2*np.pi])\n    ax.set_xticklabels(['0', 'π/2', 'π', '3π/2', '2π'])\n    \n    ax = axes[1]\n    energy_gap = np.array(eigenvalues_2) - np.array(eigenvalues_1)\n    ax.plot(theta_range, energy_gap, 'purple', linewidth=3)\n    ax.fill_between(theta_range, 0, energy_gap, alpha=0.3)\n    ax.set_xlabel('θ (parameter)', fontsize=12)\n    ax.set_ylabel('Energy gap ΔE = E₂ - E₁', fontsize=12)\n    ax.set_title('Energy Gap (Splitting)', fontsize=13, fontweight='bold')\n    ax.grid(True, alpha=0.3)\n    ax.set_xticks([0, np.pi/2, np.pi, 3*np.pi/2, 2*np.pi])\n    ax.set_xticklabels(['0', 'π/2', 'π', '3π/2', '2π'])\n    \n    plt.tight_layout()\n    plt.savefig('/tmp/eigenvalue_exercise.png', dpi=150, bbox_inches='tight')\n    plt.show()\n    \n    print(f\"\\nc) Energy levels plotted (see figure)\")\n    print()\n\n\n# ============================================================================\n# EXERCISE 4: Legendre Polynomials and Orthogonality\n# ============================================================================\n\ndef exercise_4_legendre_polynomials():\n    \"\"\"\n    Exercise 4: Special Functions - Legendre Polynomials\n    \n    Problem:\n    a) Verify orthogonality: ∫₋₁¹ P_n(x)P_m(x)dx = 2/(2n+1) δ_nm\n    b) Expand a simple function in Legendre basis\n    c) Check convergence\n    \"\"\"\n    \n    print(\"=\"*70)\n    print(\"EXERCISE 4: Legendre Polynomials\")\n    print(\"=\"*70)\n    \n    # a) Orthogonality verification\n    print(\"\\na) Orthogonality verification:\")\n    print(\"   ∫₋₁¹ P_n(x)P_m(x)dx = 2/(2n+1) × δ_nm\")\n    print(\"\\n   n  m=0     m=1     m=2     m=3     m=4\")\n    print(\"   \" + \"-\"*45)\n    \n    for n in range(5):\n        row_str = f\"{n}  \"\n        for m in range(5):\n            P_n = legendre(n)\n            P_m = legendre(m)\n            integrand = lambda x: P_n(x) * P_m(x)\n            result, _ = quad(integrand, -1, 1)\n            theoretical = (2/(2*n+1)) if n == m else 0\n            row_str += f\"{result:7.4f} \"\n        print(row_str)\n    \n    # b) Expand f(x) = x² in Legendre basis\n    # f(x) = Σ c_n P_n(x) where c_n = (2n+1)/2 ∫₋₁¹ f(x)P_n(x)dx\n    \n    def f_target(x):\n        return x**2\n    \n    N_expansion = 20\n    coefficients = []\n    \n    for n in range(N_expansion):\n        P_n = legendre(n)\n        integrand = lambda x: f_target(x) * P_n(x)\n        integral, _ = quad(integrand, -1, 1)\n        c_n = (2*n + 1) / 2 * integral\n        coefficients.append(c_n)\n    \n    print(f\"\\nb) Legendre expansion of f(x) = x²:\")\n    print(f\"   f(x) ≈ Σ c_n P_n(x)\")\n    print(f\"\\n   Coefficients (non-zero terms):\")\n    for n in range(N_expansion):\n        if abs(coefficients[n]) > 1e-10:\n            print(f\"   c_{n} = {coefficients[n]:10.6f}\")\n    \n    # c) Plot convergence\n    x_plot = np.linspace(-1, 1, 200)\n    fig, axes = plt.subplots(1, 2, figsize=(13, 5))\n    \n    # Partial sums\n    for N_terms in [2, 5, 10, 20]:\n        f_expansion = np.zeros_like(x_plot)\n        for n in range(N_terms):\n            P_n = legendre(n)\n            f_expansion += coefficients[n] * P_n(x_plot)\n        \n        ax = axes[0]\n        ax.plot(x_plot, f_expansion, linewidth=2, label=f'N={N_terms}')\n    \n    ax.plot(x_plot, f_target(x_plot), 'k--', linewidth=3, label='f(x) = x²')\n    ax.set_xlabel('x', fontsize=12)\n    ax.set_ylabel('f(x)', fontsize=12)\n    ax.set_title('Legendre Series Expansion of f(x) = x²', fontsize=13, fontweight='bold')\n    ax.legend(fontsize=11)\n    ax.grid(True, alpha=0.3)\n    \n    # Error vs number of terms\n    errors = []\n    N_range = range(1, N_expansion)\n    for N in N_range:\n        f_expansion = np.zeros_like(x_plot)\n        for n in range(N):\n            P_n = legendre(n)\n            f_expansion += coefficients[n] * P_n(x_plot)\n        error = np.sqrt(np.trapz((f_expansion - f_target(x_plot))**2, x_plot))\n        errors.append(error)\n    \n    ax = axes[1]\n    ax.semilogy(N_range, errors, 'b-', linewidth=2.5, marker='o')\n    ax.set_xlabel('Number of terms (N)', fontsize=12)\n    ax.set_ylabel('L2 error (log scale)', fontsize=12)\n    ax.set_title('Convergence of Legendre Expansion', fontsize=13, fontweight='bold')\n    ax.grid(True, alpha=0.3, which='both')\n    \n    plt.tight_layout()\n    plt.savefig('/tmp/legendre_exercise.png', dpi=150, bbox_inches='tight')\n    plt.show()\n    \n    print(f\"\\nc) Convergence plotted (see figure)\")\n    print(f\"   L2 error after N=10 terms: {errors[9]:.6f}\")\n    print()\n\n\n# ============================================================================\n# EXERCISE 5: ODE Solver - Driven Harmonic Oscillator\n# ============================================================================\n\ndef exercise_5_ode_solver():\n    \"\"\"\n    Exercise 5: Solving ODEs Numerically\n    \n    Problem: Solve the driven damped harmonic oscillator\n    d²x/dt² + 2γ(dx/dt) + ω₀²x = F₀ cos(ωt)\n    \n    with initial conditions x(0) = 0, v(0) = 0\n    \n    a) Implement as system of first-order ODEs\n    b) Solve numerically for resonance condition ω ≈ ω₀\n    c) Plot amplitude vs driving frequency\n    \"\"\"\n    \n    print(\"=\"*70)\n    print(\"EXERCISE 5: ODE Solver - Driven Harmonic Oscillator\")\n    print(\"=\"*70)\n    \n    # Parameters\n    omega_0 = 1.0      # Natural frequency\n    gamma = 0.1        # Damping coefficient\n    F_0 = 1.0          # Driving force amplitude\n    \n    # System of first-order ODEs: [x, v] where v = dx/dt\n    def driven_oscillator(t, y, omega_drive):\n        x, v = y\n        # d²x/dt² = -2γ(dx/dt) - ω₀²x + F₀cos(ωt)\n        a = -2*gamma*v - omega_0**2*x + F_0*np.cos(omega_drive*t)\n        return [v, a]\n    \n    # Solve for different driving frequencies\n    omega_range = np.linspace(0.3, 1.7, 30) * omega_0\n    amplitudes = []\n    \n    for omega_d in omega_range:\n        # Solve over long time to reach steady state\n        t_span = (0, 200)  # Long simulation to reach steady state\n        t_eval = np.linspace(0, 200, 10000)\n        sol = solve_ivp(driven_oscillator, t_span, [0, 0], args=(omega_d,),\n                       t_eval=t_eval, method='RK45')\n        \n        # Extract steady-state amplitude (last oscillations)\n        steady_state_idx = -500\n        amplitude = np.max(np.abs(sol.y[0][steady_state_idx:]))\n        amplitudes.append(amplitude)\n    \n    # Theoretical amplitude for driven damped oscillator\n    amplitudes_theory = F_0 / np.sqrt((omega_0**2 - omega_range**2)**2 + (2*gamma*omega_range)**2)\n    \n    print(f\"\\na) System of ODEs:\")\n    print(f\"   dx/dt = v\")\n    print(f\"   dv/dt = -2γv - ω₀²x + F₀cos(ωt)\")\n    print(f\"\\n   Parameters: ω₀ = {omega_0}, γ = {gamma}, F₀ = {F_0}\")\n    \n    # Plot\n    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5))\n    \n    # Amplitude vs driving frequency\n    ax1.plot(omega_range/omega_0, amplitudes_theory, 'b-', linewidth=2.5, label='Theory')\n    ax1.plot(omega_range/omega_0, amplitudes, 'ro', markersize=6, label='Numerical')\n    ax1.axvline(x=1, color='gray', linestyle='--', alpha=0.5, label='Resonance ω=ω₀')\n    ax1.set_xlabel('Driving frequency (ω/ω₀)', fontsize=12)\n    ax1.set_ylabel('Steady-state amplitude', fontsize=12)\n    ax1.set_title('Resonance Curve: Amplitude vs Frequency', fontsize=13, fontweight='bold')\n    ax1.legend(fontsize=11)\n    ax1.grid(True, alpha=0.3)\n    \n    # Phase diagram at resonance\n    omega_resonance = omega_0\n    t_res = np.linspace(0, 50, 5000)\n    sol_res = solve_ivp(driven_oscillator, (0, 50), [0, 0], args=(omega_resonance,),\n                        t_eval=t_res, method='RK45')\n    \n    ax2.plot(sol_res.y[0], sol_res.y[1], 'b-', linewidth=1.5, alpha=0.7)\n    ax2.set_xlabel('Displacement x', fontsize=12)\n    ax2.set_ylabel('Velocity v', fontsize=12)\n    ax2.set_title('Phase Space Trajectory at Resonance', fontsize=13, fontweight='bold')\n    ax2.grid(True, alpha=0.3)\n    \n    plt.tight_layout()\n    plt.savefig('/tmp/ode_exercise.png', dpi=150, bbox_inches='tight')\n    plt.show()\n    \n    print(f\"\\nb) Solutions computed for 30 driving frequencies\")\n    print(f\"\\nc) Key results:\")\n    max_amp_idx = np.argmax(amplitudes_theory)\n    print(f\"   Maximum amplitude: {amplitudes_theory[max_amp_idx]:.4f}\")\n    print(f\"   At frequency: ω/ω₀ = {omega_range[max_amp_idx]/omega_0:.4f}\")\n    print(f\"   Quality factor: Q = ω₀/(2γ) = {omega_0/(2*gamma):.2f}\")\n    print()\n\n\n# ============================================================================\n# RUN ALL EXERCISES\n# ============================================================================\n\nif __name__ == \"__main__\":\n    print(\"\\n\" + \"#\"*70)\n    print(\"MATHEMATICAL METHODS FOR PHYSICS: PRACTICE EXERCISES\")\n    print(\"#\"*70 + \"\\n\")\n    \n    exercise_1_vector_calculus()\n    exercise_2_fourier_series()\n    exercise_3_eigenvalue_problem()\n    exercise_4_legendre_polynomials()\n    exercise_5_ode_solver()\n    \n    print(\"\\n\" + \"#\"*70)\n    print(\"ALL EXERCISES COMPLETED!\")\n    print(\"#\"*70 + \"\\n\")\n
